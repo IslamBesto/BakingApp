@@ -2,20 +2,16 @@ package com.example.saidi.bakingapp.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by saidi on 08/05/2018.
- */
-
 class Ingredient {
 
     @SerializedName("quantity")
-    private Integer quantity;
+    private float quantity;
     @SerializedName("measure")
     private String measure;
     @SerializedName("ingredient")
     private String ingredient;
 
-    public Integer getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
