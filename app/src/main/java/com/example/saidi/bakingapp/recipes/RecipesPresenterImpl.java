@@ -3,6 +3,7 @@ package com.example.saidi.bakingapp.recipes;
 
 import android.content.Context;
 
+import com.example.saidi.bakingapp.Utils;
 import com.example.saidi.bakingapp.data.RecipeAPI;
 import com.example.saidi.bakingapp.data.ServiceManager;
 import com.example.saidi.bakingapp.data.model.Recipe;
@@ -20,7 +21,7 @@ public class RecipesPresenterImpl implements IRecipesPresenter.Presenter {
 
 
     public RecipesPresenterImpl(Context context,
-                                IRecipesPresenter.View view) {
+            IRecipesPresenter.View view) {
         mContext = context;
         mRecipesView = view;
     }
@@ -32,16 +33,21 @@ public class RecipesPresenterImpl implements IRecipesPresenter.Presenter {
 
     @Override
     public void getAllRecipes() {
-        ServiceManager.createService(RecipeAPI.class).getAllRecipes().enqueue(new Callback<List<Recipe>>() {
-            @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                mRecipesView.showRecipes(response.body());
-            }
+        ServiceManager.createService(RecipeAPI.class).getAllRecipes().enqueue(
+                new Callback<List<Recipe>>() {
+                    @Override
+                    public void onResponse(Call<List<Recipe>> call,
+                            Response<List<Recipe>> response) {
+                        mRecipesView.showRecipes(response.body());
+                    }
 
-            @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                mRecipesView.showError(1);
-            }
-        });
+                    @Override
+                    public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                        if (!Utils.isConnectivityAvailable(mContext)) {
+                            mRecipesView.showError(1);
+                        }
+
+                    }
+                });
     }
 }
