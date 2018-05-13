@@ -1,5 +1,6 @@
 package com.example.saidi.bakingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
@@ -44,6 +45,10 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
             @Override
             public void onRecipeClicked(View view, int position, Recipe recipe) {
                 Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_SHORT).show();
+                Intent recipeDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
+                recipeDetailIntent.putExtra("recipe", recipe);
+                startActivity(recipeDetailIntent);
+
             }
         };
 
