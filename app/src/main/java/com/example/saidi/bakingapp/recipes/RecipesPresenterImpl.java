@@ -21,7 +21,7 @@ public class RecipesPresenterImpl implements IRecipesPresenter.Presenter {
 
 
     public RecipesPresenterImpl(Context context,
-            IRecipesPresenter.View view) {
+                                IRecipesPresenter.View view) {
         mContext = context;
         mRecipesView = view;
     }
@@ -37,7 +37,7 @@ public class RecipesPresenterImpl implements IRecipesPresenter.Presenter {
                 new Callback<List<Recipe>>() {
                     @Override
                     public void onResponse(Call<List<Recipe>> call,
-                            Response<List<Recipe>> response) {
+                                           Response<List<Recipe>> response) {
                         mRecipesView.showRecipes(response.body());
                     }
 

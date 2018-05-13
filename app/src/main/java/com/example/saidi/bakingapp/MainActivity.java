@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -37,8 +38,7 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecipesRecycler.setLayoutManager(layoutManager);
+        mRecipesRecycler.setLayoutManager(getLayoutManager());
 
         mRecipeListClickListener = new RecipesListAdapter.RecipeListClickListener() {
             @Override
@@ -71,5 +71,16 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
         }
         Snackbar snackbar = Snackbar.make(mContainer, messageError, Snackbar.LENGTH_LONG);
         snackbar.show();
+    }
+
+    private RecyclerView.LayoutManager getLayoutManager() {
+        boolean isPhone = getResources().getBoolean(R.bool.is_phone);
+        RecyclerView.LayoutManager layoutManager;
+        if (isPhone) {
+            layoutManager = new LinearLayoutManager(this);
+        } else {
+            layoutManager = new GridLayoutManager(this, 3);
+        }
+        return layoutManager;
     }
 }
