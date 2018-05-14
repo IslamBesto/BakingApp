@@ -1,4 +1,4 @@
-package com.example.saidi.bakingapp.recipedetail;
+package com.example.saidi.bakingapp.recipedetail.customview;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

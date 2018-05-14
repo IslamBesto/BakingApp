@@ -1,7 +1,5 @@
 package com.example.saidi.bakingapp;
 
-import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -22,6 +20,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
 
 public class MainActivity extends AppCompatActivity implements IRecipesPresenter.View {
 

@@ -1,4 +1,4 @@
-package com.example.saidi.bakingapp.recipedetail;
+package com.example.saidi.bakingapp.recipedetail.customview;
 
 
 import android.content.Context;
@@ -28,18 +28,22 @@ public class StepView extends FrameLayout {
 
     public StepView(@NonNull Context context) {
         super(context);
+        init(context);
     }
 
     public StepView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init(context);
     }
 
     public StepView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
     }
 
     public StepView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init(context);
     }
 
     protected void init(Context context) {

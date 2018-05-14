@@ -2,9 +2,6 @@ package com.example.saidi.bakingapp.recipedetail;
 
 import com.example.saidi.bakingapp.data.model.Recipe;
 
-/**
- * Created by saidi on 13/05/2018.
- */
 
 public class RecipeDetailPresenterImpl implements IRecipeDetailPresenter.Presenter {
 
