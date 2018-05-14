@@ -1,5 +1,7 @@
 package com.example.saidi.bakingapp;
 
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
             public void onRecipeClicked(View view, int position, Recipe recipe) {
                 Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_SHORT).show();
                 Intent recipeDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
-                recipeDetailIntent.putExtra("recipe", recipe);
+                recipeDetailIntent.putExtra(KEY_RECIPE, recipe);
                 startActivity(recipeDetailIntent);
 
             }
