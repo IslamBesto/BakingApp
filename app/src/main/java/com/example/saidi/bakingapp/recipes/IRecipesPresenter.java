@@ -11,10 +11,13 @@ public interface IRecipesPresenter {
     interface View extends BaseView<Presenter> {
         void showRecipes(List<Recipe> recipes);
 
+        void showRecipeDetail(Recipe recipe);
         void showError(int errorCode);
     }
 
     interface Presenter extends BasePresenter {
         void getAllRecipes();
+
+        void onRecipeClicked(Recipe recipe);
     }
 }

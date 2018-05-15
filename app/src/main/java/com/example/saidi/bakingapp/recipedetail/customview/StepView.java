@@ -57,8 +57,8 @@ public class StepView extends FrameLayout {
 
 
     public void bind(Step step) {
-        mStepNumber.setText(step.getId());
+        mStepNumber.setText(step.getId().toString());
         mShortDescription.setText(step.getShortDescription());
-        mVideoAvailable.setVisibility(step.getVideoURL().equals("") ? GONE : VISIBLE);
+        mVideoAvailable.setVisibility(step.getVideoURL().equals("") ? INVISIBLE : VISIBLE);
     }
 }

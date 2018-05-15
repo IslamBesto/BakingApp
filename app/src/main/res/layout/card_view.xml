@@ -22,7 +22,6 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Ingredient"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
     </LinearLayout>

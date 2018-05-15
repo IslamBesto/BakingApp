@@ -9,7 +9,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.saidi.bakingapp.data.model.Recipe;
 import com.example.saidi.bakingapp.recipes.IRecipesPresenter;
@@ -46,11 +45,8 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
         mRecipeListClickListener = new RecipesListAdapter.RecipeListClickListener() {
             @Override
             public void onRecipeClicked(View view, int position, Recipe recipe) {
-                Toast.makeText(MainActivity.this, "clicked", Toast.LENGTH_SHORT).show();
-                Intent recipeDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
-                recipeDetailIntent.putExtra(KEY_RECIPE, recipe);
-                startActivity(recipeDetailIntent);
 
+                mPresenter.onRecipeClicked(recipe);
             }
         };
 
@@ -68,6 +64,13 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
         RecipesListAdapter recipesListAdapter = new RecipesListAdapter(recipes,
                 mRecipeListClickListener);
         mRecipesRecycler.setAdapter(recipesListAdapter);
+    }
+
+    @Override
+    public void showRecipeDetail(Recipe recipe) {
+        Intent recipeDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
+        recipeDetailIntent.putExtra(KEY_RECIPE, recipe);
+        startActivity(recipeDetailIntent);
     }
 
     @Override

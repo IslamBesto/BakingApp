@@ -58,7 +58,10 @@ public class IngredientView extends FrameLayout {
      */
     public void bind(Ingredient ingredient) {
         mIngredientTitle.setText(ingredient.getIngredient());
-        String quantity = new StringBuilder().append(ingredient.getQuantity()).append(ingredient.getMeasure()).toString();
+        String quantity = new StringBuilder()
+                .append(ingredient.getQuantity())
+                .append(" ")
+                .append(ingredient.getMeasure()).toString();
         mIngredientQuantity.setText(quantity);
     }
 }

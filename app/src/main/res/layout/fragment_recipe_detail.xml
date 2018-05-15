@@ -35,6 +35,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                android:textColor="@android:color/black"
                 app:layout_constraintStart_toStartOf="@+id/imageView"
                 app:layout_constraintTop_toBottomOf="@+id/imageView"
                 tools:text="Brownies" />
@@ -43,6 +44,8 @@
                 android:id="@+id/serving_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:paddingBottom="8dp"
                 app:layout_constraintStart_toStartOf="@+id/recipe_title"
                 app:layout_constraintTop_toBottomOf="@+id/recipe_title"
                 tools:text="Number of serving: 8" />

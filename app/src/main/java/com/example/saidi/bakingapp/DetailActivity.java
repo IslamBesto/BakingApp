@@ -2,10 +2,10 @@ package com.example.saidi.bakingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.saidi.bakingapp.data.model.Recipe;
 import com.example.saidi.bakingapp.recipedetail.RecipeDetailFragment;
 
 import butterknife.ButterKnife;
@@ -21,7 +21,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_detail);
         ButterKnife.bind(this);
         Intent recipeDetailIntent = getIntent();
-        Parcelable recipe = recipeDetailIntent.getExtras().getParcelable(KEY_RECIPE);
+        Recipe recipe = recipeDetailIntent.getParcelableExtra(KEY_RECIPE);
         Bundle recipeBundle = new Bundle();
         recipeBundle.putParcelable(KEY_RECIPE, recipe);
         RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();

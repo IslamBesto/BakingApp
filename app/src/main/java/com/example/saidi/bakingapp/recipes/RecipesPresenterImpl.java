@@ -50,4 +50,9 @@ public class RecipesPresenterImpl implements IRecipesPresenter.Presenter {
                     }
                 });
     }
+
+    @Override
+    public void onRecipeClicked(Recipe recipe) {
+        mRecipesView.showRecipeDetail(recipe);
+    }
 }

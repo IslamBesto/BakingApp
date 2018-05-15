@@ -3,4 +3,5 @@
     <string name="servings">Serving : %1$s </string>
     <string name="general_error">Error</string>
     <string name="connectivity_error">No connection available!</string>
+    <string name="ingredient">Ingredient</string>
 </resources>
