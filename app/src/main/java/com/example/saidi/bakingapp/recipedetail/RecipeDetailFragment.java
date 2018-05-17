@@ -1,26 +1,33 @@
 package com.example.saidi.bakingapp.recipedetail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.saidi.bakingapp.R;
+import com.example.saidi.bakingapp.StepActivity;
+import com.example.saidi.bakingapp.Utils;
 import com.example.saidi.bakingapp.data.model.Ingredient;
 import com.example.saidi.bakingapp.data.model.Recipe;
 import com.example.saidi.bakingapp.data.model.Step;
 import com.example.saidi.bakingapp.recipedetail.customview.CardView;
 import com.example.saidi.bakingapp.recipedetail.customview.IngredientView;
 import com.example.saidi.bakingapp.recipedetail.customview.StepView;
+import com.example.saidi.bakingapp.steps.StepDetailFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+import static com.example.saidi.bakingapp.Constants.KEY_STEP;
 
 
 public class RecipeDetailFragment extends Fragment implements IRecipeDetailPresenter.View {
@@ -37,13 +44,17 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
     @BindView(R.id.steps)
     CardView mSteps;
 
+    @BindView(R.id.imageView)
+    ImageView mRecipeImage;
+
     private Recipe mRecipe;
     private IRecipeDetailPresenter.Presenter mPresenter;
+    private StepView.StepClickListener mStepClickListener;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, rootView);
         mRecipe = getArguments().getParcelable(KEY_RECIPE);
@@ -53,24 +64,66 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
     public void setPresenter(IRecipeDetailPresenter.Presenter presenter) {
         mPresenter = presenter;
     }
 
     @Override
     public void showRecipeDetail(Recipe recipe) {
+        mRecipeImage.setImageResource(Utils.getRecipeDrawable(recipe.getName()));
         mRecipeTitle.setText(recipe.getName());
         mServingNumber.setText(getString(R.string.servings, recipe.getServings().toString()));
+        mStepClickListener = new StepView.StepClickListener() {
+            @Override
+            public void onStepClicked(Step step) {
+                mPresenter.onStepClicked(step);
+            }
+        };
         setIngredient(recipe);
-        mSteps.setTitle("Steps");
+        setStep(recipe);
+    }
+
+    @Override
+    public void showStep(Step step) {
+        boolean isTowPane = getResources().getBoolean(R.bool.is_phone);
+        if (isTowPane) {
+            Intent stepIntent = new Intent(getActivity(), StepActivity.class);
+            stepIntent.putExtra(KEY_STEP, step);
+            stepIntent.putExtra(KEY_RECIPE, mRecipe);
+            startActivity(stepIntent);
+        } else {
+            StepDetailFragment stepDetailFragment = new StepDetailFragment();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            Bundle recipeBundle = new Bundle();
+            recipeBundle.putParcelable(KEY_RECIPE, mRecipe);
+            recipeBundle.putParcelable(KEY_STEP, step);
+            stepDetailFragment.setArguments(recipeBundle);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.step_detail_fragment, stepDetailFragment)
+                    .commit();
+        }
+
+    }
+
+    @Override
+    public void showError(int errorCode) {
+        //TODO
+    }
+
+    private void setStep(Recipe recipe) {
+        mSteps.setTitle(getString(R.string.step));
         LinearLayout linearLayout = (LinearLayout) mSteps.getContainer();
         for (Step step : recipe.getSteps()) {
             StepView stepView = new StepView(getContext());
             stepView.bind(step);
+            stepView.setStepClickListener(mStepClickListener);
             linearLayout.addView(stepView);
         }
-
-
     }
 
     private void setIngredient(Recipe recipe) {
@@ -81,10 +134,5 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
             ingredientView.bind(ingredient);
             linearLayout.addView(ingredientView);
         }
-    }
-
-    @Override
-    public void showError(int errorCode) {
-
     }
 }

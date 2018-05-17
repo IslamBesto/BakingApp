@@ -1,6 +1,7 @@
 package com.example.saidi.bakingapp.recipedetail;
 
 import com.example.saidi.bakingapp.data.model.Recipe;
+import com.example.saidi.bakingapp.data.model.Step;
 
 
 public class RecipeDetailPresenterImpl implements IRecipeDetailPresenter.Presenter {
@@ -26,5 +27,10 @@ public class RecipeDetailPresenterImpl implements IRecipeDetailPresenter.Present
         } else {
             mRecipeDetailView.showError(1);
         }
+    }
+
+    @Override
+    public void onStepClicked(Step step) {
+        mRecipeDetailView.showStep(step);
     }
 }

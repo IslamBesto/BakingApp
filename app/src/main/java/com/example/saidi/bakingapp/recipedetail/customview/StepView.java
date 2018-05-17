@@ -15,6 +15,7 @@ import com.example.saidi.bakingapp.data.model.Step;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StepView extends FrameLayout {
     @BindView(R.id.step_number)
@@ -25,6 +26,8 @@ public class StepView extends FrameLayout {
 
     @BindView(R.id.video_available)
     ImageView mVideoAvailable;
+    private Step mStep;
+    private StepClickListener mStepClickListener;
 
     public StepView(@NonNull Context context) {
         super(context);
@@ -41,7 +44,8 @@ public class StepView extends FrameLayout {
         init(context);
     }
 
-    public StepView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public StepView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr,
+            int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context);
     }
@@ -49,6 +53,7 @@ public class StepView extends FrameLayout {
     protected void init(Context context) {
         LayoutInflater.from(context).inflate(getLayoutId(), this);
         ButterKnife.bind(this);
+
     }
 
     public int getLayoutId() {
@@ -60,5 +65,19 @@ public class StepView extends FrameLayout {
         mStepNumber.setText(step.getId().toString());
         mShortDescription.setText(step.getShortDescription());
         mVideoAvailable.setVisibility(step.getVideoURL().equals("") ? INVISIBLE : VISIBLE);
+        mStep = step;
+    }
+
+    public void setStepClickListener(StepClickListener stepClickListener) {
+        mStepClickListener = stepClickListener;
+    }
+
+    @OnClick(R.id.step_container)
+    public void onStepClicked() {
+        mStepClickListener.onStepClicked(mStep);
+    }
+
+    public interface StepClickListener {
+        void onStepClicked(Step step);
     }
 }
