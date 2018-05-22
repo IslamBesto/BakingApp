@@ -8,8 +8,8 @@ import com.example.saidi.bakingapp.data.model.Step;
 public class StepPresenterImpl implements IStepPresenter.Presenter {
 
     private final Recipe mRecipe;
-    private final Step mStep;
     private final IStepPresenter.View mStepView;
+    private Step mStep;
 
     public StepPresenterImpl(IStepPresenter.View view, Step step, Recipe recipe) {
         mStep = step;
@@ -33,6 +33,16 @@ public class StepPresenterImpl implements IStepPresenter.Presenter {
     }
 
     @Override
+    public void onNextClicked() {
+        mStepView.onNext();
+    }
+
+    @Override
+    public void onPreviousClicked() {
+        mStepView.onPrevious();
+    }
+
+    @Override
     public void setArrowsVisibility() {
         if (mStep.getId() == 0) {
             mStepView.handleShowingNavigationArrow(Constants.KEY_SHOW_ONLY_NEXT);
@@ -41,5 +51,10 @@ public class StepPresenterImpl implements IStepPresenter.Presenter {
         } else {
             mStepView.handleShowingNavigationArrow(Constants.KEY_SHOW_BOTH);
         }
+    }
+
+    @Override
+    public void setCurrentStep(Step step) {
+        mStep = step;
     }
 }

@@ -10,14 +10,25 @@ public interface IStepPresenter {
 
     interface View extends BaseView<IStepPresenter.Presenter> {
         void showStepDetail(Step step);
+
         void showError(int errorCode);
 
         void handleShowingNavigationArrow(int navigationArrowCode);
+
+        void onNext();
+
+        void onPrevious();
     }
 
     interface Presenter extends BasePresenter {
         void getStepDetail(Step step, Recipe recipe);
 
+        void onNextClicked();
+
+        void onPreviousClicked();
+
         void setArrowsVisibility();
+
+        void setCurrentStep(Step step);
     }
 }

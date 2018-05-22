@@ -20,6 +20,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
         ButterKnife.bind(this);
+        boolean isTowPane = getResources().getBoolean(R.bool.is_phone);
         Intent recipeDetailIntent = getIntent();
         Recipe recipe = recipeDetailIntent.getParcelableExtra(KEY_RECIPE);
         Bundle recipeBundle = new Bundle();
@@ -28,7 +29,16 @@ public class DetailActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         recipeDetailFragment.setArguments(recipeBundle);
         fragmentManager.beginTransaction()
-                .add(R.id.recipe_detail_fragment, recipeDetailFragment)
+                .replace(R.id.recipe_detail_fragment, recipeDetailFragment)
                 .commit();
+
+     /*   if (!isTowPane) {
+            StepDetailFragment stepDetailFragment = new StepDetailFragment();
+            stepDetailFragment.setArguments(recipeBundle);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.step_detail_fragment, stepDetailFragment)
+                    .commit();
+        }*/
+
     }
 }

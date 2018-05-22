@@ -1,7 +1,5 @@
 package com.example.saidi.bakingapp;
 
-import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +11,9 @@ import com.example.saidi.bakingapp.steps.StepDetailFragment;
 
 import butterknife.ButterKnife;
 
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+import static com.example.saidi.bakingapp.Constants.KEY_STEP;
+
 public class StepActivity extends AppCompatActivity {
 
     @Override
@@ -22,15 +23,15 @@ public class StepActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Intent recipeDetailIntent = getIntent();
         Recipe recipe = recipeDetailIntent.getParcelableExtra(KEY_RECIPE);
-        Step step = recipeDetailIntent.getParcelableExtra("step");
+        Step step = recipeDetailIntent.getParcelableExtra(KEY_STEP);
         Bundle recipeBundle = new Bundle();
         recipeBundle.putParcelable(KEY_RECIPE, recipe);
-        recipeBundle.putParcelable("step", step);
+        recipeBundle.putParcelable(KEY_STEP, step);
         StepDetailFragment stepDetailFragment = new StepDetailFragment();
         stepDetailFragment.setArguments(recipeBundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.step_detail_fragment, stepDetailFragment)
+                .replace(R.id.step_detail_fragment, stepDetailFragment)
                 .commit();
     }
 }

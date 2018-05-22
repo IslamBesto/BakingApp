@@ -1,11 +1,10 @@
 package com.example.saidi.bakingapp.recipedetail;
 
-import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +21,13 @@ import com.example.saidi.bakingapp.data.model.Step;
 import com.example.saidi.bakingapp.recipedetail.customview.CardView;
 import com.example.saidi.bakingapp.recipedetail.customview.IngredientView;
 import com.example.saidi.bakingapp.recipedetail.customview.StepView;
+import com.example.saidi.bakingapp.steps.StepDetailFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+import static com.example.saidi.bakingapp.Constants.KEY_STEP;
 
 
 public class RecipeDetailFragment extends Fragment implements IRecipeDetailPresenter.View {
@@ -87,10 +90,24 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
 
     @Override
     public void showStep(Step step) {
-        Intent stepIntent = new Intent(getActivity(), StepActivity.class);
-        stepIntent.putExtra("step", step);
-        stepIntent.putExtra(KEY_RECIPE, mRecipe);
-        startActivity(stepIntent);
+        boolean isTowPane = getResources().getBoolean(R.bool.is_phone);
+        if (isTowPane) {
+            Intent stepIntent = new Intent(getActivity(), StepActivity.class);
+            stepIntent.putExtra(KEY_STEP, step);
+            stepIntent.putExtra(KEY_RECIPE, mRecipe);
+            startActivity(stepIntent);
+        } else {
+            StepDetailFragment stepDetailFragment = new StepDetailFragment();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            Bundle recipeBundle = new Bundle();
+            recipeBundle.putParcelable(KEY_RECIPE, mRecipe);
+            recipeBundle.putParcelable(KEY_STEP, step);
+            stepDetailFragment.setArguments(recipeBundle);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.step_detail_fragment, stepDetailFragment)
+                    .commit();
+        }
+
     }
 
     @Override
