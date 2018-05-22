@@ -1,9 +1,15 @@
 package com.example.saidi.bakingapp;
 
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +26,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
-
 public class MainActivity extends AppCompatActivity implements IRecipesPresenter.View {
 
     @BindView(R.id.recipes_recycler_view)
@@ -33,6 +37,18 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
     RecipesListAdapter.RecipeListClickListener mRecipeListClickListener;
 
     private IRecipesPresenter.Presenter mPresenter;
+
+    @Nullable
+    private MainIdlingResource mMainIdlingResource;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mMainIdlingResource == null) {
+            mMainIdlingResource = new MainIdlingResource();
+        }
+        return mMainIdlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
             }
         };
 
-        mPresenter = new RecipesPresenterImpl(this, this);
+        mPresenter = new RecipesPresenterImpl(this, this, (MainIdlingResource) getIdlingResource());
         mPresenter.start();
     }
 
