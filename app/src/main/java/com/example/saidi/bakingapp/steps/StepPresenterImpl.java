@@ -28,7 +28,7 @@ public class StepPresenterImpl implements IStepPresenter.Presenter {
         if (step != null) {
             mStepView.showStepDetail(step);
         } else {
-            mStepView.showError(1);
+            mStepView.showError();
         }
     }
 

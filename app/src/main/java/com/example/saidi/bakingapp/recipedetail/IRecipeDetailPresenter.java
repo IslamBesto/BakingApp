@@ -11,7 +11,8 @@ public interface IRecipeDetailPresenter {
         void showRecipeDetail(Recipe recipe);
 
         void showStep(Step step);
-        void showError(int errorCode);
+
+        void showError();
     }
 
     interface Presenter extends BasePresenter {

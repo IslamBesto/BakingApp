@@ -1,8 +1,12 @@
 package com.example.saidi.bakingapp.recipedetail;
 
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+import static com.example.saidi.bakingapp.Constants.KEY_STEP;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -10,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.saidi.bakingapp.R;
@@ -25,9 +30,6 @@ import com.example.saidi.bakingapp.steps.StepDetailFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
-import static com.example.saidi.bakingapp.Constants.KEY_STEP;
 
 
 public class RecipeDetailFragment extends Fragment implements IRecipeDetailPresenter.View {
@@ -46,6 +48,9 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
 
     @BindView(R.id.imageView)
     ImageView mRecipeImage;
+
+    @BindView(R.id.detail_container)
+    ScrollView mScrollView;
 
     private Recipe mRecipe;
     private IRecipeDetailPresenter.Presenter mPresenter;
@@ -111,8 +116,10 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
     }
 
     @Override
-    public void showError(int errorCode) {
-        //TODO
+    public void showError() {
+        Snackbar snackbar = Snackbar.make(mScrollView, getString(R.string.general_error),
+                Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     private void setStep(Recipe recipe) {

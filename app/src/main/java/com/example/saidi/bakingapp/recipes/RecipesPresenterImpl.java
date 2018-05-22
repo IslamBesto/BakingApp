@@ -37,6 +37,7 @@ public class RecipesPresenterImpl implements IRecipesPresenter.Presenter {
     @Override
     public void getAllRecipes() {
         mMainIdlingResource.setIdleState(false);
+        mRecipesView.showLoader();
         ServiceManager.createService(RecipeAPI.class).getAllRecipes().enqueue(
                 new Callback<List<Recipe>>() {
                     @Override
@@ -44,6 +45,7 @@ public class RecipesPresenterImpl implements IRecipesPresenter.Presenter {
                                            Response<List<Recipe>> response) {
                         mRecipesView.showRecipes(response.body());
                         mMainIdlingResource.setIdleState(true);
+                        mRecipesView.hideLoader();
                     }
 
                     @Override

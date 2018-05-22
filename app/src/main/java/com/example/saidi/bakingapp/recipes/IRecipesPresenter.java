@@ -12,6 +12,10 @@ public interface IRecipesPresenter {
         void showRecipes(List<Recipe> recipes);
         void showRecipeDetail(Recipe recipe);
         void showError(int errorCode);
+
+        void showLoader();
+
+        void hideLoader();
     }
 
     interface Presenter extends BasePresenter {

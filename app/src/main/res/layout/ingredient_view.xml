@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry"
-        tools:text="Graham Cracker crumbs" />
+        tools:text="Graham Cracker crumbs " />
 
     <TextView
         android:id="@+id/ingredient_quantity"
@@ -35,7 +35,7 @@
         android:layout_height="1dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:background="@color/colorAccent"
+        android:background="@color/greyLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />

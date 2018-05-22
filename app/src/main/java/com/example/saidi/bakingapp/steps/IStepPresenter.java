@@ -11,7 +11,7 @@ public interface IStepPresenter {
     interface View extends BaseView<IStepPresenter.Presenter> {
         void showStepDetail(Step step);
 
-        void showError(int errorCode);
+        void showError();
 
         void handleShowingNavigationArrow(int navigationArrowCode);
 

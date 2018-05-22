@@ -25,7 +25,7 @@ public class RecipeDetailPresenterImpl implements IRecipeDetailPresenter.Present
         if (recipe != null) {
             mRecipeDetailView.showRecipeDetail(recipe);
         } else {
-            mRecipeDetailView.showError(1);
+            mRecipeDetailView.showError();
         }
     }
 

@@ -1,15 +1,23 @@
 package com.example.saidi.bakingapp.steps;
 
 
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+import static com.example.saidi.bakingapp.Constants.KEY_SHOW_BOTH;
+import static com.example.saidi.bakingapp.Constants.KEY_SHOW_ONLY_NEXT;
+import static com.example.saidi.bakingapp.Constants.KEY_SHOW_ONLY_PREVIOUS;
+import static com.example.saidi.bakingapp.Constants.KEY_STEP;
+
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.saidi.bakingapp.R;
@@ -32,12 +40,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
-import static com.example.saidi.bakingapp.Constants.KEY_SHOW_BOTH;
-import static com.example.saidi.bakingapp.Constants.KEY_SHOW_ONLY_NEXT;
-import static com.example.saidi.bakingapp.Constants.KEY_SHOW_ONLY_PREVIOUS;
-import static com.example.saidi.bakingapp.Constants.KEY_STEP;
-
 public class StepDetailFragment extends Fragment implements IStepPresenter.View {
 
     @BindView(R.id.step_description)
@@ -52,6 +54,9 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
     @BindView(R.id.player_view)
     SimpleExoPlayerView mPlayerView;
 
+    @BindView(R.id.step_container)
+    ScrollView mScrollView;
+
     private SimpleExoPlayer mExoPlayer;
 
 
@@ -61,7 +66,7 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+            @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_step_detail, container, false);
         setRetainInstance(true);
         ButterKnife.bind(this, rootView);
@@ -70,6 +75,42 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
         mPresenter = new StepPresenterImpl(this, mStep, mRecipe);
         mPresenter.start();
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (getActivity().getResources().getConfiguration().orientation ==
+                Configuration.ORIENTATION_LANDSCAPE) {
+            mStepDescription.setVisibility(View.GONE);
+            mPreviousArrow.setVisibility(View.GONE);
+            mNextArrow.setVisibility(View.GONE);
+
+        } else {
+            mStepDescription.setVisibility(View.VISIBLE);
+            mPreviousArrow.setVisibility(View.VISIBLE);
+            mNextArrow.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mExoPlayer != null) {
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        releasePlayer();
     }
 
     @Override
@@ -82,13 +123,20 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
         mStepDescription.setText(step.getDescription());
         mPresenter.setArrowsVisibility();
         mStepId = step.getId();
-        initializePlayer(step.getVideoURL());
+        if (step.getVideoURL().equals("") || step.getVideoURL().equals(null)) {
+            mPlayerView.setVisibility(View.GONE);
+        } else {
+            mPlayerView.setVisibility(View.VISIBLE);
+            initializePlayer(step.getVideoURL());
+        }
 
     }
 
     @Override
-    public void showError(int errorCode) {
-
+    public void showError() {
+        Snackbar snackbar = Snackbar.make(mScrollView, getString(R.string.general_error),
+                Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     @Override
@@ -140,17 +188,18 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
             // Create an instance of the ExoPlayer.
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
-            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
+            mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector,
+                    loadControl);
             mPlayerView.setPlayer(mExoPlayer);
             // Prepare the MediaSource.
             String userAgent = Util.getUserAgent(getContext(), "bakingapp");
-            MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(videoUrl), new DefaultDataSourceFactory(
-                    getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+            MediaSource mediaSource = new ExtractorMediaSource(Uri.parse(videoUrl),
+                    new DefaultDataSourceFactory(
+                            getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
             mExoPlayer.setPlayWhenReady(true);
         }
     }
-
 
     /**
      * Release ExoPlayer.
@@ -160,42 +209,6 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        releasePlayer();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPresenter.start();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mExoPlayer != null) {
-            releasePlayer();
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (getActivity().getResources().getConfiguration().orientation ==
-                Configuration.ORIENTATION_LANDSCAPE) {
-            mStepDescription.setVisibility(View.GONE);
-            mPreviousArrow.setVisibility(View.GONE);
-            mNextArrow.setVisibility(View.GONE);
-
-        } else {
-            mStepDescription.setVisibility(View.VISIBLE);
-            mPreviousArrow.setVisibility(View.VISIBLE);
-            mNextArrow.setVisibility(View.VISIBLE);
         }
     }
 }
