@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/margin_large"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:text="Recipe of the day" />
 
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/widget_margin"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="@dimen/margin_xxlarge"
         android:lineSpacingExtra="6dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="Ingredient" />

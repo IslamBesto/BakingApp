@@ -104,8 +104,8 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
 
     @Override
     public void showStep(Step step) {
-        boolean isTowPane = getResources().getBoolean(R.bool.is_phone);
-        if (isTowPane) {
+        boolean isOnePane = getResources().getBoolean(R.bool.is_phone);
+        if (isOnePane) {
             Intent stepIntent = new Intent(getActivity(), StepActivity.class);
             stepIntent.putExtra(KEY_STEP, step);
             stepIntent.putExtra(KEY_RECIPE, mRecipe);
