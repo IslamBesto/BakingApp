@@ -12,12 +12,17 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.saidi.bakingapp.R;
+import com.example.saidi.bakingapp.RecipeWidgetService;
+import com.example.saidi.bakingapp.SharedPrefManager;
+import com.example.saidi.bakingapp.SharedPrefsHelper;
 import com.example.saidi.bakingapp.StepActivity;
 import com.example.saidi.bakingapp.Utils;
 import com.example.saidi.bakingapp.data.model.Ingredient;
@@ -52,6 +57,9 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
     @BindView(R.id.detail_container)
     ScrollView mScrollView;
 
+    @BindView(R.id.fav_switch)
+    Switch mFavSwitch;
+
     private Recipe mRecipe;
     private IRecipeDetailPresenter.Presenter mPresenter;
     private StepView.StepClickListener mStepClickListener;
@@ -65,6 +73,7 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
         mRecipe = getArguments().getParcelable(KEY_RECIPE);
         mPresenter = new RecipeDetailPresenterImpl(this, mRecipe);
         mPresenter.start();
+        handleFavWidget();
         return rootView;
     }
 
@@ -112,7 +121,6 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
                     .replace(R.id.step_detail_fragment, stepDetailFragment)
                     .commit();
         }
-
     }
 
     @Override
@@ -121,6 +129,7 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
                 Snackbar.LENGTH_LONG);
         snackbar.show();
     }
+
 
     private void setStep(Recipe recipe) {
         mSteps.setTitle(getString(R.string.step));
@@ -141,5 +150,29 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
             ingredientView.bind(ingredient);
             linearLayout.addView(ingredientView);
         }
+    }
+
+    private void handleFavWidget() {
+        final SharedPrefManager sharedPrefManager = getSharedPrefManager();
+        mFavSwitch.setChecked(sharedPrefManager.getFavId() == mRecipe.getId());
+        mFavSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    sharedPrefManager.clear();
+                    sharedPrefManager.saveFavId(mRecipe.getId());
+                    RecipeWidgetService.startActionUpdateRecipeWidgets(getContext(), mRecipe);
+                } else {
+                    sharedPrefManager.removeFav(mRecipe.getId());
+                }
+            }
+        });
+    }
+
+    private SharedPrefManager getSharedPrefManager() {
+        SharedPrefsHelper sharedPrefsHelper = new SharedPrefsHelper(
+                getActivity().getApplicationContext());
+        SharedPrefManager sharedPrefManager = new SharedPrefManager(sharedPrefsHelper);
+        return sharedPrefManager;
     }
 }
