@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BakingApp</string>
     <string name="servings">Serving : %1$s </string>
-    <string name="general_error">Error</string>
+    <string name="general_error">Error, something went wrong!</string>
     <string name="connectivity_error">No connection available!</string>
     <string name="ingredient">Ingredient</string>
     <string name="step">Steps</string>

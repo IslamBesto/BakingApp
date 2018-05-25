@@ -22,7 +22,6 @@ public class Utils {
         switch (recipeName) {
             case "Nutella Pie":
                 drawable = R.drawable.nutella_pie;
-
                 break;
             case "Brownies":
                 drawable = R.drawable.brownies;
@@ -32,6 +31,9 @@ public class Utils {
                 break;
             case "Cheesecake":
                 drawable = R.drawable.cheescake;
+                break;
+            default:
+                drawable = R.drawable.recipe_placeholder;
                 break;
         }
         return drawable;

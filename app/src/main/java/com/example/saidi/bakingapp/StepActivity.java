@@ -1,5 +1,8 @@
 package com.example.saidi.bakingapp;
 
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+import static com.example.saidi.bakingapp.Constants.KEY_STEP;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -11,15 +14,13 @@ import com.example.saidi.bakingapp.steps.StepDetailFragment;
 
 import butterknife.ButterKnife;
 
-import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
-import static com.example.saidi.bakingapp.Constants.KEY_STEP;
-
 public class StepActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
+        getSupportActionBar().hide();
         ButterKnife.bind(this);
         Intent recipeDetailIntent = getIntent();
         Recipe recipe = recipeDetailIntent.getParcelableExtra(KEY_RECIPE);

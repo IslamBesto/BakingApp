@@ -8,7 +8,9 @@ import static com.example.saidi.bakingapp.Constants.KEY_SHOW_ONLY_PREVIOUS;
 import static com.example.saidi.bakingapp.Constants.KEY_STEP;
 
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -16,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -32,7 +35,8 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.ui.PlayerControlView;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
@@ -52,12 +56,17 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
     ImageView mPreviousArrow;
 
     @BindView(R.id.player_view)
-    SimpleExoPlayerView mPlayerView;
+    PlayerView mPlayerView;
 
     @BindView(R.id.step_container)
     ScrollView mScrollView;
 
+    @BindView(R.id.exo_pip)
+    FrameLayout mPictureInPicture;
+
     private SimpleExoPlayer mExoPlayer;
+
+    private PlayerControlView mControlView;
 
 
     private Recipe mRecipe;
@@ -74,6 +83,9 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
         Step mStep = getArguments().getParcelable(KEY_STEP);
         mPresenter = new StepPresenterImpl(this, mStep, mRecipe);
         mPresenter.start();
+        mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource
+                (getResources(), R.drawable.recipe_placeholder));
+        toPictureInPicture();
         return rootView;
     }
 
@@ -81,6 +93,15 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
     public void onResume() {
         super.onResume();
         mPresenter.start();
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
+        if (isInPictureInPictureMode) {
+            mPlayerView.hideController();
+        } else {
+            mPlayerView.showController();
+        }
     }
 
     @Override
@@ -201,14 +222,27 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
         }
     }
 
-    /**
-     * Release ExoPlayer.
-     */
     private void releasePlayer() {
         if (mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
+        }
+    }
+
+    private void toPictureInPicture() {
+        mControlView = mPlayerView.findViewById(R.id.exo_controller);
+        mPictureInPicture = mControlView.findViewById(R.id.exo_pip);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mPictureInPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().enterPictureInPictureMode();
+                    return;
+                }
+            });
+        } else {
+            mPictureInPicture.setVisibility(View.GONE);
         }
     }
 }
