@@ -27,7 +27,6 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".StepActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:parentActivityName=".DetailActivity"
             android:supportsPictureInPicture="true" />
 

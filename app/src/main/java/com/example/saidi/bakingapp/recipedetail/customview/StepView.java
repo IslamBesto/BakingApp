@@ -28,6 +28,7 @@ public class StepView extends FrameLayout {
     ImageView mVideoAvailable;
     private Step mStep;
     private StepClickListener mStepClickListener;
+    private int mPosition;
 
     public StepView(@NonNull Context context) {
         super(context);
@@ -72,9 +73,22 @@ public class StepView extends FrameLayout {
         mStepClickListener = stepClickListener;
     }
 
+    public int getmPosition() {
+        return mPosition;
+    }
+
+    public void setmPosition(int mPosition) {
+        this.mPosition = mPosition;
+    }
+
+    public void restoreBackgrondColor(int color) {
+        setBackgroundColor(getResources().getColor(color));
+    }
+
     @OnClick(R.id.step_container)
     public void onStepClicked() {
         mStepClickListener.onStepClicked(mStep);
+        setBackgroundColor(getResources().getColor(R.color.greyLight));
     }
 
     public interface StepClickListener {

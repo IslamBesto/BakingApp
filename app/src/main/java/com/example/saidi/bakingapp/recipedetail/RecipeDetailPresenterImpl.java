@@ -9,7 +9,6 @@ public class RecipeDetailPresenterImpl implements IRecipeDetailPresenter.Present
     private Recipe mRecipe;
     private IRecipeDetailPresenter.View mRecipeDetailView;
 
-
     public RecipeDetailPresenterImpl(IRecipeDetailPresenter.View view, Recipe recipe) {
         mRecipe = recipe;
         mRecipeDetailView = view;

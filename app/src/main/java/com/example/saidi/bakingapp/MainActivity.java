@@ -1,7 +1,5 @@
 package com.example.saidi.bakingapp;
 
-import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +25,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+
 public class MainActivity extends AppCompatActivity implements IRecipesPresenter.View {
 
     @BindView(R.id.recipes_recycler_view)
@@ -44,6 +44,10 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
 
     @Nullable
     private MainIdlingResource mMainIdlingResource;
+
+    private int mIndex = -1;
+    private int mTop = -1;
+    private boolean mIsPhone;
 
     @VisibleForTesting
     @NonNull
@@ -75,6 +79,28 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (mIsPhone) {
+            mIndex = ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition();
+        } else {
+            mIndex = ((GridLayoutManager) getLayoutManager()).findFirstVisibleItemPosition();
+        }
+        View v = mRecipesRecycler.getChildAt(0);
+        mTop = (v == null) ? 0 : (v.getTop() - mRecipesRecycler.getPaddingTop());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mIndex != -1 && mIsPhone) {
+            ((LinearLayoutManager) getLayoutManager()).scrollToPositionWithOffset(mIndex, mTop);
+        } else if (!mIsPhone) {
+            ((GridLayoutManager) getLayoutManager()).scrollToPositionWithOffset(mIndex, mTop);
+        }
+    }
+
+    @Override
     public void setPresenter(IRecipesPresenter.Presenter presenter) {
         mPresenter = presenter;
     }
@@ -96,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
     @Override
     public void showError(int errorCode) {
         String messageError = getString(R.string.general_error);
-        if(errorCode == 1){
+        if (errorCode == 1) {
             messageError = getString(R.string.connectivity_error);
         }
         Snackbar snackbar = Snackbar.make(mContainer, messageError, Snackbar.LENGTH_LONG);
@@ -116,9 +142,9 @@ public class MainActivity extends AppCompatActivity implements IRecipesPresenter
     }
 
     private RecyclerView.LayoutManager getLayoutManager() {
-        boolean isPhone = getResources().getBoolean(R.bool.is_phone);
+        mIsPhone = getResources().getBoolean(R.bool.is_phone);
         RecyclerView.LayoutManager layoutManager;
-        if (isPhone) {
+        if (mIsPhone) {
             layoutManager = new LinearLayoutManager(this);
         } else {
             layoutManager = new GridLayoutManager(this, 3);

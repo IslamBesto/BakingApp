@@ -1,10 +1,8 @@
 package com.example.saidi.bakingapp.recipedetail;
 
-import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
-import static com.example.saidi.bakingapp.Constants.KEY_STEP;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -36,6 +34,10 @@ import com.example.saidi.bakingapp.steps.StepDetailFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.saidi.bakingapp.Constants.KEY_RECIPE;
+import static com.example.saidi.bakingapp.Constants.KEY_STEP;
+import static com.example.saidi.bakingapp.Constants.KEY_STEP_POSITION;
+
 
 public class RecipeDetailFragment extends Fragment implements IRecipeDetailPresenter.View {
 
@@ -63,11 +65,12 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
     private Recipe mRecipe;
     private IRecipeDetailPresenter.Presenter mPresenter;
     private StepView.StepClickListener mStepClickListener;
+    private int mPosition;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         ButterKnife.bind(this, rootView);
         mRecipe = getArguments().getParcelable(KEY_RECIPE);
@@ -80,6 +83,20 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_STEP_POSITION, mPosition);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            restoreBackgroundColor(savedInstanceState.getInt(KEY_STEP_POSITION));
+        }
     }
 
     @Override
@@ -100,11 +117,14 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
         };
         setIngredient(recipe);
         setStep(recipe);
+
     }
 
     @Override
     public void showStep(Step step) {
         boolean isOnePane = getResources().getBoolean(R.bool.is_phone);
+        restoreBackgroundColor(step.getId());
+        mPosition = step.getId();
         if (isOnePane) {
             Intent stepIntent = new Intent(getActivity(), StepActivity.class);
             stepIntent.putExtra(KEY_STEP, step);
@@ -123,6 +143,21 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
         }
     }
 
+    private void restoreBackgroundColor(int stepId) {
+        LinearLayout linearLayout = (LinearLayout) mSteps.getContainer();
+        for (int i = 0; i < linearLayout.getChildCount(); i++) {
+            View view = linearLayout.getChildAt(i);
+            if (view instanceof StepView) {
+                StepView stepView = (StepView) view;
+                if (stepView.getmPosition() != stepId) {
+                    stepView.restoreBackgrondColor(R.color.white);
+                } else {
+                    stepView.restoreBackgrondColor(R.color.greyLight);
+                }
+            }
+        }
+    }
+
     @Override
     public void showError() {
         Snackbar snackbar = Snackbar.make(mScrollView, getString(R.string.general_error),
@@ -138,6 +173,7 @@ public class RecipeDetailFragment extends Fragment implements IRecipeDetailPrese
             StepView stepView = new StepView(getContext());
             stepView.bind(step);
             stepView.setStepClickListener(mStepClickListener);
+            stepView.setmPosition(step.getId());
             linearLayout.addView(stepView);
         }
     }

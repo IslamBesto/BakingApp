@@ -7,8 +7,8 @@ import com.example.saidi.bakingapp.data.model.Step;
 
 public class StepPresenterImpl implements IStepPresenter.Presenter {
 
-    private final Recipe mRecipe;
     private final IStepPresenter.View mStepView;
+    private Recipe mRecipe;
     private Step mStep;
 
     public StepPresenterImpl(IStepPresenter.View view, Step step, Recipe recipe) {
@@ -19,7 +19,9 @@ public class StepPresenterImpl implements IStepPresenter.Presenter {
 
     @Override
     public void start() {
-        getStepDetail(mStep, mRecipe);
+        if (mRecipe != null) {
+            getStepDetail(mStep, mRecipe);
+        }
     }
 
 

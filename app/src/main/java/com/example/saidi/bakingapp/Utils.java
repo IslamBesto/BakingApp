@@ -5,7 +5,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class Utils {
+public final class Utils {
 
     public static boolean isConnectivityAvailable(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(
@@ -18,7 +18,7 @@ public class Utils {
     }
 
     public static int getRecipeDrawable(String recipeName) {
-        int drawable = -1;
+        int drawable = R.drawable.recipe_placeholder;
         switch (recipeName) {
             case "Nutella Pie":
                 drawable = R.drawable.nutella_pie;
@@ -33,8 +33,7 @@ public class Utils {
                 drawable = R.drawable.cheescake;
                 break;
             default:
-                drawable = R.drawable.recipe_placeholder;
-                break;
+                return drawable;
         }
         return drawable;
     }
