@@ -140,15 +140,6 @@ public class StepDetailFragment extends Fragment implements IStepPresenter.View 
     }
 
     @Override
-    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode) {
-        if (isInPictureInPictureMode) {
-            mPlayerView.hideController();
-        } else {
-            mPlayerView.showController();
-        }
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         if (mExoPlayer != null) {
