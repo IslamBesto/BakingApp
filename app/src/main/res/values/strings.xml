@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">BakingApp</string>
+    <string name="servings">Serving : %1$s </string>
+    <string name="general_error">Error, something went wrong!</string>
+    <string name="connectivity_error">No connection available!</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="step">Steps</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="fav">Fav</string>
+    <string name="choose_fav">Go choose your favorite recipe</string>
 </resources>

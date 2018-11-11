@@ -1,15 +1,25 @@
 package com.example.saidi.bakingapp.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by saidi on 08/05/2018.
- */
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
     @SerializedName("id")
     private Integer id;
     @SerializedName("name")
@@ -23,6 +33,29 @@ public class Recipe {
     @SerializedName("image")
     private String image;
 
+    public Recipe(Integer id, String name,
+            List<Ingredient> ingredients,
+            List<Step> steps, Integer servings, String image) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.servings = servings;
+        this.image = image;
+    }
+
+    private Recipe(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.image = in.readString();
+        this.ingredients = new ArrayList<>();
+        in.readList(this.ingredients, Ingredient.class.getClassLoader());
+        this.steps = new ArrayList<>();
+        in.readList(this.steps, Step.class.getClassLoader());
+        this.servings = in.readInt();
+
+    }
+
     public Integer getId() {
         return id;
     }
@@ -35,39 +68,34 @@ public class Recipe {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public List<Ingredient> getIngredients() {
         return ingredients;
-    }
-
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
     }
 
     public List<Step> getSteps() {
         return steps;
     }
 
-    public void setSteps(List<Step> steps) {
-        this.steps = steps;
-    }
-
     public Integer getServings() {
         return servings;
-    }
-
-    public void setServings(Integer servings) {
-        this.servings = servings;
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int i) {
+        dest.writeInt(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.image);
+        dest.writeList(this.ingredients);
+        dest.writeList(this.steps);
+        dest.writeInt(this.servings);
     }
 }
